@@ -1,4 +1,4 @@
-package com.sparta.bootlind.security.UserDetails;
+package com.sparta.bootlind.security;
 
 import com.sparta.bootlind.entity.User;
 import com.sparta.bootlind.repository.UserRepository;

@@ -34,7 +34,7 @@ public class Post extends TimeStamped{
 
     public Post(PostRequest requestDto, User user){
         this.title = requestDto.getTitle();
-        this.content = requestDto.getContents();
+        this.content = requestDto.getContent();
         this.category = requestDto.getCategoryEnum();
         this.user = user;
     }

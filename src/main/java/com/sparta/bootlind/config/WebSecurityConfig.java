@@ -2,8 +2,8 @@ package com.sparta.bootlind.config;
 
 import com.sparta.bootlind.security.JwtAuthenticationFilter;
 import com.sparta.bootlind.security.JwtAuthorizationFilter;
-import com.sparta.bootlind.security.JwtUtil;
-import com.sparta.bootlind.security.UserDetails.UserDetailsServiceImpl;
+import com.sparta.bootlind.jwt.JwtUtil;
+import com.sparta.bootlind.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
