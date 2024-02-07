@@ -16,11 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-    private static PostRepository postRepository;
-    private static CommentRepository commentRepository;
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
-    public CommentResponse createComment(Long postid, CommentRequest request, User user) {
-        Post post = postRepository.findById(postid).orElseThrow(
+    public CommentResponse createComment(Long id, CommentRequest request, User user) {
+        Post post = postRepository.findById(id).orElseThrow(
                 ()-> new IllegalArgumentException("해당 id의 게시글이 없습니다.")
         );
         Comment comment = commentRepository.save(new Comment(user,post,request));
@@ -38,7 +38,7 @@ public class CommentService {
 
 
 
-    public String deleteComment(Long id, CommentRequest request, User user) {
+    public String deleteComment(Long id, User user) {
         Comment comment = findComment(id);
         if(!comment.getUser().getUsername().equals(user.getUsername()))
             throw new IllegalArgumentException("댓글 작성자만 삭제할 수 있습니다.");

@@ -30,11 +30,8 @@ public class CommentController {
 
     @DeleteMapping ("/comments/{id}")
     @Operation(summary = "댓글 삭제", description = "댓글을 삭제한다.")
-    public String deleteComment(@PathVariable Long id, @RequestBody CommentRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return  commentService.deleteComment(id, request, userDetails.getUser());
+    public String deleteComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return  commentService.deleteComment(id, userDetails.getUser());
     }
-
-
-
 
 }
