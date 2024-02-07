@@ -26,7 +26,8 @@ public class Post extends TimeStamped{
     private String content;
 
     @Column(nullable = false)
-    private CategoryEnum category;
+    private String category;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -35,13 +36,13 @@ public class Post extends TimeStamped{
     public Post(PostRequest postRequest, User user){
         this.title = postRequest.getTitle();
         this.content = postRequest.getContent();
-        this.category = postRequest.getCategoryEnum();
+        this.category = postRequest.getCategory();
         this.user = user;
     }
 
     public void update(PostRequest postRequest) {
         this.title = postRequest.getTitle();
         this.content = postRequest.getContent();
-        this.category = postRequest.getCategoryEnum();
+        this.category = postRequest.getCategory();
     }
 }

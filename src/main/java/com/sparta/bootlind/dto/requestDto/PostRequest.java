@@ -7,5 +7,5 @@ import lombok.Getter;
 public class PostRequest {
     private String title;
     private String content;
-    private CategoryEnum categoryEnum;
+    private String category;
 }

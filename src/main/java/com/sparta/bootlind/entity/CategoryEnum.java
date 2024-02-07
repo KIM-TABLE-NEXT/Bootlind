@@ -15,9 +15,11 @@ public enum CategoryEnum {
         return  this.category;
     }
 
+
     public static class Category{
         public static final String SPRING = "SPRING";
         public static final String REACT = "REACT";
         public static final String NODE_JS = "NODE_JS";
     }
+
 }
