@@ -70,5 +70,10 @@ public class UserController {
         return userService.deleteUser(userDetails.getUser());
     }
 
+    @PutMapping("users/status/restore/{id}")
+    @Operation(summary = "회원 복구(관리자메뉴)", description = "탈퇴한 회원의 상태를 활성화(ACTIVATED)로 변경한다.")
+    public String restoreUser(@PathVariable Long id, @RequestBody @Valid SignupRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.restoreUser(id, requestDto, userDetails.getUser());
+    }
 
 }

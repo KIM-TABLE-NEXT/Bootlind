@@ -100,4 +100,10 @@ public class User {
     }
 
 
+    public void updateUser(String username, String profile, String nickname, String password) {
+        this.username = username;
+        this.profile = profile;
+        this.nickname = nickname;
+        this.password = password;
+    }
 }

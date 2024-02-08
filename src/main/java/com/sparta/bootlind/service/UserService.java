@@ -109,4 +109,34 @@ public class UserService {
         target.updateStatus("DELETED");
         return "탈퇴 상태로 변경되었습니다";
     }
+
+    public String restoreUser(Long id, SignupRequest requestDto, User user) {
+
+        //if(user!=관리자)
+        //    throw  new IllegalArgumentException("관리자만 탈퇴 사용자를 복구할 수 있습니다.");
+
+        User target = userRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("해당 id의 사용자가 존재하지 않습니다.")
+        );
+
+        String username = requestDto.getUsername();
+        String profile = requestDto.getProfile();
+        String nickname = requestDto.getNickname();
+        String password = passwordEncoder.encode(requestDto.getPassword());
+
+        Optional<User> checkUsername = userRepository.findByUsername(username);
+        if(checkUsername.isPresent()){
+            throw new IllegalArgumentException("중복된 username 입니다.");
+        }
+
+        Optional<User> checkNickname = userRepository.findByNickname(nickname);
+        if(checkNickname.isPresent()){
+            throw new IllegalArgumentException("중복된 nickname 입니다.");
+        }
+
+        target.updateUser(username, profile, nickname, password);
+        target.updateStatus("ACTIVATED");
+
+        return "복구 되었습니다.";
+    }
 }
