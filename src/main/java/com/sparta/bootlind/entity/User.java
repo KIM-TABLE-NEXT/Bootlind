@@ -106,4 +106,20 @@ public class User {
         this.nickname = nickname;
         this.password = password;
     }
+
+    public void updateUsername(String username) {
+        this.username = username;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public void updatePassword(String encode) {
+        this.password = encode;
+    }
 }
