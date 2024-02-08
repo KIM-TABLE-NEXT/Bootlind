@@ -44,8 +44,8 @@ public class PostController {
 
     @GetMapping("/posts/{category}")
     @Operation(summary = "게시글 목록 조회 (카테고리)", description = "카테고리를 사용하여 게시글을 조회한다.")
-    public List<PostResponse> getPostByCategory(@PathVariable String category, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.getPostByCategory(category, userDetails.getUser());
+    public List<PostResponse> getPostListByCategory(@PathVariable String category, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getPostListByCategory(category, userDetails.getUser());
     }
 
     @PutMapping("/posts/{id}")
@@ -68,11 +68,11 @@ public class PostController {
 
     @GetMapping("/posts/likes")
     @Operation(summary = "게시글 좋아요순 목록 조회", description = "좋아요 게시글 목록을 조회한다.")
-    public List<PostResponse> getPostLike() {
-        return postService.getPostLike();
+    public List<PostResponse> getPostLike(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getPostLike(userDetails.getUser());
     }
 
-    @GetMapping("/posts/folllow")
+    @GetMapping("/posts/folllowers")
     @Operation(summary = "게시글 목록 조회 (팔로워)", description = "팔로워 목록을 사용하여 게시글을 조회한다.")
     public List<PostResponse> getPostByFollower(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return postService.getPostByFollower(userDetails.getUser());

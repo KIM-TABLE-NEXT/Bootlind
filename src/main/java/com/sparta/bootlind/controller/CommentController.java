@@ -45,8 +45,8 @@ public class CommentController {
 
     @GetMapping("/comments/likes")
     @Operation(summary = "게시글 좋아요순 목록 조회", description = "좋아요 게시글 목록을 조회한다.")
-    public List<CommentResponse> getCommentLike() {
-        return commentService.getCommentLike();
+    public List<CommentResponse> getCommentLike(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return commentService.getCommentLike(userDetails.getUser());
     }
 
 }

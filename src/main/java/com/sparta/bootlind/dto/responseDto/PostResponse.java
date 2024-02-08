@@ -13,14 +13,14 @@ public class PostResponse {
     private Long id;
     private String title;
     private String content;
-    private String username;
+    private String nickname;
     private LocalDateTime createdAt;
 
-    public PostResponse(Post post){
+    public PostResponse(Post post, String nickname){
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.username = post.getUser().getUsername();
+        this.nickname = nickname;
         this.createdAt = post.getCreatedAt();
     }
 }

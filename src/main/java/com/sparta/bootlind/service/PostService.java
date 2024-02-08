@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -27,25 +26,35 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
     public PostResponse createPost(PostRequest postRequest, User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         categoryRepository.findByCategory(postRequest.getCategory()).orElseThrow(
                 ()-> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다.")
         );
+
         Post post = postRepository.save(new Post(postRequest, user));
-        return new PostResponse(post);
+        return new PostResponse(post, user.getNickname());
     }
 
     public PostResponse getPostByTitle(String title, User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         Post post = (Post) postRepository.findByTitle(title).orElseThrow(
                 ()-> new IllegalArgumentException("해당 title 의 게시글이 없습니다.")
         );
 
-//        if(!post.getUser().getUsername().equals(user.getUsername()))
-//            throw new IllegalArgumentException("게시글을 확인할 권한이 없습니다.");
-
-        return new PostResponse(post);
+        if(!post.getUser().getStatus().equals("ACTIVATED"))
+            return new PostResponse(post, "알수없음");
+        else
+            return new PostResponse(post, post.getUser().getNickname());
     }
 
-    public List<PostResponse> getPostByCategory(String category, User user) {
+    public List<PostResponse> getPostListByCategory(String category, User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         categoryRepository.findByCategory(category).orElseThrow(
                 ()-> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다.")
         );
@@ -53,17 +62,23 @@ public class PostService {
         List<PostResponse> postResponseList = new ArrayList<>();
 
 
-//        if(!post.getUser().getUsername().equals(user.getUsername()))
-//            throw new IllegalArgumentException("게시글을 확인할 권한이 없습니다.");
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
 
         for(Post post : postList){
-            postResponseList.add(new PostResponse(post));
+            if(!post.getUser().getStatus().equals("ACTIVATED"))
+                postResponseList.add(new PostResponse(post, "알수없음"));
+            else
+                postResponseList.add(new PostResponse(post, post.getUser().getNickname()));
         }
         return postResponseList;
     }
 
     @Transactional
     public PostResponse updatePost(Long id, PostRequest postRequest, User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 id의 게시글이 없습니다.")
         );
@@ -72,29 +87,48 @@ public class PostService {
             throw new IllegalArgumentException("게시글을 수정할 권한이 없습니다.");
 
         post.update(postRequest);
-        return new PostResponse(post);
+
+        if(!post.getUser().getStatus().equals("ACTIVATED"))
+            return new PostResponse(post, "알수없음");
+        else
+            return new PostResponse(post, post.getUser().getNickname());
     }
 
 
 
     public List<PostResponse> getPostList(User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         List<Post> postList = postRepository.findAll();
         List<PostResponse> postResponseList = new ArrayList<>();
 
         for(Post post : postList){
-            postResponseList.add(new PostResponse(post));
+            if(!post.getUser().getStatus().equals("ACTIVATED"))
+                postResponseList.add(new PostResponse(post, "알수없음"));
+            else
+                postResponseList.add(new PostResponse(post, post.getUser().getNickname()));
         }
         return postResponseList;
     }
 
     public PostResponse getPostById(Long id, User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         Post post = postRepository.findById(id).orElseThrow(
                 ()-> new IllegalArgumentException("해당 id의 게시글이 없습니다.")
         );
-        return new PostResponse(post);
+        if(!post.getUser().getStatus().equals("ACTIVATED"))
+            return new PostResponse(post, "알수없음");
+        else
+            return new PostResponse(post, post.getUser().getNickname());
     }
 
     public String deletePost(Long id, User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         Post post = postRepository.findById(id).orElseThrow(
                 ()-> new IllegalArgumentException("해당 id의 게시글이 없습니다.")
         );
@@ -115,6 +149,9 @@ public class PostService {
 
     @Transactional
     public String likePost(Long id, User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         Post post = postRepository.findById(id).orElseThrow(
                 ()-> new IllegalArgumentException("해당 id의 게시글이 없습니다.")
         );
@@ -140,17 +177,26 @@ public class PostService {
         }
     }
 
-    public List<PostResponse> getPostLike() {
+    public List<PostResponse> getPostLike(User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "likescnt"));
         List<PostResponse> postResponseList = new ArrayList<>();
 
         for(Post post : postList){
-            postResponseList.add(new PostResponse(post));
+            if(!post.getUser().getStatus().equals("ACTIVATED"))
+                postResponseList.add(new PostResponse(post, "알수없음"));
+            else
+                postResponseList.add(new PostResponse(post, post.getUser().getNickname()));
         }
         return postResponseList;
     }
 
     public List<PostResponse> getPostByFollower(User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         String followers[] = user.getFollwers();
         List<PostResponse> postResponseList = new ArrayList<>();
         for(String followerId : followers) {
@@ -158,8 +204,11 @@ public class PostService {
                     () -> new IllegalArgumentException("해당 id의 유저가 없습니다.")
             );
             List<Post> postList = postRepository.findAllByUser(follower);
-            for (Post post : postList) {
-                postResponseList.add(new PostResponse(post));
+            for(Post post : postList){
+                if(!post.getUser().getStatus().equals("ACTIVATED"))
+                    postResponseList.add(new PostResponse(post, "알수없음"));
+                else
+                    postResponseList.add(new PostResponse(post, post.getUser().getNickname()));
             }
         }
         return postResponseList;

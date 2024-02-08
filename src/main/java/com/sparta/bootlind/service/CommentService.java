@@ -25,6 +25,9 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     public CommentResponse createComment(Long id, CommentRequest request, User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         Post post = postRepository.findById(id).orElseThrow(
                 ()-> new IllegalArgumentException("해당 id의 게시글이 없습니다.")
         );
@@ -34,6 +37,9 @@ public class CommentService {
 
     @Transactional
     public CommentResponse updateComment(Long id, CommentRequest request, User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         Comment comment = findComment(id);
         if(!comment.getUser().getUsername().equals(user.getUsername()))
             throw new IllegalArgumentException("댓글 작성자만 삭제할 수 있습니다.");
@@ -44,6 +50,9 @@ public class CommentService {
 
 
     public String deleteComment(Long id, User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         Comment comment = findComment(id);
         if(!comment.getUser().getUsername().equals(user.getUsername()))
             throw new IllegalArgumentException("댓글 작성자만 삭제할 수 있습니다.");
@@ -61,6 +70,9 @@ public class CommentService {
 
     @Transactional
     public String likeComment(Long id, User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         Comment comment = findComment(id);
 
         if(comment.getUser().getUsername().equals(user.getUsername()))
@@ -84,7 +96,10 @@ public class CommentService {
         }
     }
 
-    public List<CommentResponse> getCommentLike() {
+    public List<CommentResponse> getCommentLike(User user) {
+        if(!user.getStatus().equals("ACTIVATED"))
+            throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
+
         List<Comment> commentList = commentRepository.findAll(Sort.by(Sort.Direction.DESC, "likescnt"));
         List<CommentResponse> commentResponseList = new ArrayList<>();
 
