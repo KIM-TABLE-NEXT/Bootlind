@@ -11,6 +11,7 @@ import com.sparta.bootlind.entity.UserRoleEnum;
 import com.sparta.bootlind.repository.CommentRepository;
 import com.sparta.bootlind.repository.PostRepository;
 import com.sparta.bootlind.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,28 +60,35 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public UserResponse updateProfile(UserRequest requestDto, User user) {
-        user.setProfile(requestDto.getProfile());
-        userRepository.save(user);
-        return new UserResponse(user);
+    @Transactional
+    public String followById(Long id, User user) {
+        User userfollow = userRepository.findByUsername(user.getUsername()).orElseThrow(
+                ()-> new IllegalArgumentException("해당 id의 사용자가 존재하지 않습니다.")
+        );
+        userRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("해당 id의 사용자가 존재하지 않습니다.")
+        );
+        return userfollow.follow(id);
     }
 
-    // 계정 삭제
-    public String delete(User user) {
+    public String deleteUser(User user) {
         User target = userRepository.findByUsername(user.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다.")
+                () -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다")
         );
+
         User blank = userRepository.findById(1L).orElseThrow(
-                () -> new IllegalArgumentException("알수없음이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("알수없음 이 존재하지 않습니다")
         );
 
         List<Comment> commentList = commentRepository.findAllByUser(target);
-        commentList.forEach(comment -> comment.updateUser(blank));
+        for(Comment comment : commentList)
+            comment.updateUser(blank);
 
         List<Post> postList = postRepository.findAllByUser(target);
-        postList.forEach(post -> post.updateUser(blank));
+        for(Post post : postList)
+            post.updateUser(blank);
 
         userRepository.deleteById(target.getId());
-        return target.getUsername() + " 가 삭제되었습니다.";
+        return target.getUsername() + "삭제되었습니다.";
     }
 }
