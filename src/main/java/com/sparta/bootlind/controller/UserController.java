@@ -49,10 +49,10 @@ public class UserController {
         }
     }
 
-    @PostMapping("/follow/{id}")
-    @Operation(summary = "팔로우(id)", description = "다른 사용자를 팔로우/언팔로우 한다.")
-    public String followById(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return userService.followById(id, userDetails.getUser());
+    @PostMapping("/follows/{userid}")
+    @Operation(summary = "팔로우(userid)", description = "다른 사용자를 팔로우/언팔로우 한다.")
+    public String followById(@PathVariable Long userid, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.followById(userid, userDetails.getUser());
     }
 
     @PutMapping("users/updates/deactivate")
@@ -73,10 +73,10 @@ public class UserController {
         return userService.deleteUser(userDetails.getUser());
     }
 
-    @PutMapping("users/updates/restore/{id}")
+    @PutMapping("users/updates/restore/{userid}")
     @Operation(summary = "회원 복구(관리자메뉴)", description = "탈퇴한 회원의 상태를 활성화(ACTIVATED)로 변경한다.") // 관리자 인가 필요
-    public String restoreUser(@PathVariable Long id, @RequestBody @Valid SignupRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return userService.restoreUser(id, requestDto, userDetails.getUser());
+    public String restoreUser(@PathVariable Long userid, @RequestBody @Valid SignupRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.restoreUser(userid, requestDto, userDetails.getUser());
     }
 
     @PutMapping("users/updates/username")

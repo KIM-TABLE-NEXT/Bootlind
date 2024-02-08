@@ -2,15 +2,12 @@ package com.sparta.bootlind.service;
 
 import com.sparta.bootlind.dto.requestDto.CommentRequest;
 import com.sparta.bootlind.dto.responseDto.CommentResponse;
-import com.sparta.bootlind.dto.responseDto.PostResponse;
 import com.sparta.bootlind.entity.Comment;
 import com.sparta.bootlind.entity.Post;
 import com.sparta.bootlind.entity.User;
 import com.sparta.bootlind.repository.CommentRepository;
 import com.sparta.bootlind.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +29,7 @@ public class CommentService {
                 ()-> new IllegalArgumentException("해당 id의 게시글이 없습니다.")
         );
         Comment comment = commentRepository.save(new Comment(user,post,request));
-        return new CommentResponse(comment);
+        return new CommentResponse(comment, user.getNickname());
     }
 
     @Transactional
@@ -44,7 +41,7 @@ public class CommentService {
         if(!comment.getUser().getUsername().equals(user.getUsername()))
             throw new IllegalArgumentException("댓글 작성자만 삭제할 수 있습니다.");
         comment.update(request);
-        return new CommentResponse(comment);
+        return new CommentResponse(comment, user.getNickname());
     }
 
 
@@ -96,15 +93,22 @@ public class CommentService {
         }
     }
 
-    public List<CommentResponse> getCommentLike(User user) {
+    public List<CommentResponse> getCommentList(Long id, User user) {
         if(!user.getStatus().equals("ACTIVATED"))
             throw new IllegalArgumentException("활성화 상태인 사용자만 가능합니다.");
 
-        List<Comment> commentList = commentRepository.findAll(Sort.by(Sort.Direction.DESC, "likescnt"));
+        Post post = postRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("해당 id의 게시글이 없습니다.")
+        );
+
+        List<Comment> commentList = commentRepository.findAllByPost(post);
         List<CommentResponse> commentResponseList = new ArrayList<>();
 
         for(Comment comment : commentList){
-            commentResponseList.add(new CommentResponse(comment));
+            if(!comment.getUser().getStatus().equals("ACTIVATED"))
+                commentResponseList.add(new CommentResponse(comment, "알수없음"));
+            else
+                commentResponseList.add(new CommentResponse(comment, comment.getUser().getNickname()));
         }
         return commentResponseList;
     }

@@ -1,8 +1,11 @@
 package com.sparta.bootlind.controller;
 
+import com.sparta.bootlind.dto.requestDto.CategoryRequest;
+import com.sparta.bootlind.dto.requestDto.UpdateCategoryRequest;
 import com.sparta.bootlind.security.UserDetailsImpl;
 import com.sparta.bootlind.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,27 +20,27 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/category")
+    @GetMapping("/categories")
     @Operation(summary = "카테고리 목록 조회", description = "전체 카테고리 목록을 조회한다.")
-    public List<String> getCategoryList(){
-        return categoryService.getCategoryList();
+    public List<String> getCategoryList(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return categoryService.getCategoryList(userDetails.getUser());
     }
 
-    @PostMapping("/category/{categoryname}")
-    @Operation(summary = "카테고리 추가", description = "카테고리를 추가한다.")
-    public String addCategory(@PathVariable String categoryname, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return categoryService.addCategory(categoryname, userDetails.getUser());
+    @PostMapping("/categories")
+    @Operation(summary = "카테고리 추가(관리자)", description = "카테고리를 추가한다.") // 관리자 인가 추가 필요
+    public String addCategory(@RequestBody @Valid CategoryRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return categoryService.addCategory(request, userDetails.getUser());
     }
 
-    @PutMapping("/category/{categoryname}/{newcategoryname}")
-    @Operation(summary = "카테고리 수정", description = "카테고리를 수정한다.")
-    public String updateCategory(@PathVariable String categoryname, @PathVariable String newcategoryname, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return categoryService.updateCategory(categoryname, newcategoryname, userDetails.getUser());
+    @PutMapping("/categories")
+    @Operation(summary = "카테고리 수정(관리자)", description = "카테고리를 수정한다.") // 관리자 인가 추가 필요
+    public String updateCategory(@RequestBody @Valid UpdateCategoryRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return categoryService.updateCategory(request, userDetails.getUser());
     }
 
-    @DeleteMapping("/category/{categoryname}")
-    @Operation(summary = "카테고리 삭제", description = "카테고리를 삭제한다.")
-    public String deleteCategory(@PathVariable String categoryname, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return categoryService.deleteCategory(categoryname, userDetails.getUser());
+    @DeleteMapping("/categories")
+    @Operation(summary = "카테고리 삭제(관리자)", description = "카테고리를 삭제한다.") // 관리자 인가 추가 필요
+    public String deleteCategory(@RequestBody @Valid CategoryRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return categoryService.deleteCategory(request, userDetails.getUser());
     }
 }
