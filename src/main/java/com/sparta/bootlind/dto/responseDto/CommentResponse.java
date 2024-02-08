@@ -18,8 +18,8 @@ public class CommentResponse {
     public CommentResponse(Comment comment, String nickname) {
         this.id = comment.getId();
         this.postTitle = comment.getPost().getTitle();
-        this.content =comment.getContent();
+        this.content = comment.getContent();
         this.nickname = nickname;
-        this.createdAt =comment.getCreatedAt();
+        this.createdAt = comment.getCreatedAt();
     }
 }

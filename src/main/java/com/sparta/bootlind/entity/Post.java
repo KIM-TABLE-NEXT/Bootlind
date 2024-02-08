@@ -2,7 +2,6 @@ package com.sparta.bootlind.entity;
 
 import com.sparta.bootlind.dto.requestDto.PostRequest;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ import lombok.Setter;
 @Table(name = "posts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
-public class Post extends TimeStamped{
+public class Post extends TimeStamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +39,7 @@ public class Post extends TimeStamped{
     @Column
     private Integer likescnt;
 
-    public Post(PostRequest postRequest, User user){
+    public Post(PostRequest postRequest, User user) {
         this.title = postRequest.getTitle();
         this.content = postRequest.getContent();
         this.category = postRequest.getCategory();

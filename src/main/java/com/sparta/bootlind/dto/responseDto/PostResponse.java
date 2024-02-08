@@ -3,7 +3,6 @@ package com.sparta.bootlind.dto.responseDto;
 import com.sparta.bootlind.entity.Post;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +15,7 @@ public class PostResponse {
     private String nickname;
     private LocalDateTime createdAt;
 
-    public PostResponse(Post post, String nickname){
+    public PostResponse(Post post, String nickname) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();

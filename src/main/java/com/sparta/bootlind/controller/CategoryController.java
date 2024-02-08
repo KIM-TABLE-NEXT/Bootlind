@@ -22,25 +22,25 @@ public class CategoryController {
 
     @GetMapping("/categories")
     @Operation(summary = "카테고리 목록 조회", description = "전체 카테고리 목록을 조회한다.")
-    public List<String> getCategoryList(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public List<String> getCategoryList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return categoryService.getCategoryList(userDetails.getUser());
     }
 
     @PostMapping("/categories")
     @Operation(summary = "카테고리 추가(관리자)", description = "카테고리를 추가한다.") // 관리자 인가 추가 필요
-    public String addCategory(@RequestBody @Valid CategoryRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public String addCategory(@RequestBody @Valid CategoryRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return categoryService.addCategory(request, userDetails.getUser());
     }
 
     @PutMapping("/categories")
     @Operation(summary = "카테고리 수정(관리자)", description = "카테고리를 수정한다.") // 관리자 인가 추가 필요
-    public String updateCategory(@RequestBody @Valid UpdateCategoryRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public String updateCategory(@RequestBody @Valid UpdateCategoryRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return categoryService.updateCategory(request, userDetails.getUser());
     }
 
     @DeleteMapping("/categories")
     @Operation(summary = "카테고리 삭제(관리자)", description = "카테고리를 삭제한다.") // 관리자 인가 추가 필요
-    public String deleteCategory(@RequestBody @Valid CategoryRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public String deleteCategory(@RequestBody @Valid CategoryRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return categoryService.deleteCategory(request, userDetails.getUser());
     }
 }

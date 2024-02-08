@@ -19,7 +19,7 @@ public class Category {
     @Column(nullable = false)
     private String category;
 
-    public Category(String category){
+    public Category(String category) {
         this.category = category;
     }
 

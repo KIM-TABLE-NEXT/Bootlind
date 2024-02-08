@@ -36,10 +36,17 @@ public class PostController {
     public PostResponse getPostById(@PathVariable Long userid, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.getPostById(userid, userDetails.getUser());
     }
+
     @GetMapping("/posts/titles/{title}")
     @Operation(summary = "게시글 조회 (제목)", description = "제목을 사용하여 게시글을 조회한다.")
     public PostResponse getPostByTitle(@PathVariable String title, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.getPostByTitle(title, userDetails.getUser());
+    }
+
+    @GetMapping("/posts/titles/all/{title}")
+    @Operation(summary = "게시글 목록 조회 (제목)", description = "제목을 사용하여 게시글 목록을 조회한다.")
+    public List<PostResponse> getPostListByTitle(@PathVariable String title, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getPostListByTitle(title, userDetails.getUser());
     }
 
     @GetMapping("/posts/categories/{category}")
@@ -50,7 +57,7 @@ public class PostController {
 
     @PutMapping("/posts/{postid}")
     @Operation(summary = "게시글 수정", description = "지정된 ID를 사용하여 게시글을 수정한다.")
-    public PostResponse updatePost(@PathVariable Long postid,@RequestBody PostRequest postRequest , @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public PostResponse updatePost(@PathVariable Long postid, @RequestBody PostRequest postRequest, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.updatePost(postid, postRequest, userDetails.getUser());
     }
 
@@ -74,7 +81,7 @@ public class PostController {
 
     @GetMapping("/posts/folllowers")
     @Operation(summary = "게시글 목록 조회 (팔로워)", description = "팔로워 목록을 사용하여 게시글을 조회한다.")
-    public List<PostResponse> getPostByFollower(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public List<PostResponse> getPostByFollower(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.getPostByFollower(userDetails.getUser());
     }
 }

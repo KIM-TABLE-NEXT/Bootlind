@@ -54,14 +54,14 @@ public class UserService {
     @Transactional
     public String followById(Long id, User user) {
         User userfollow = userRepository.findById(user.getId()).orElseThrow(
-                ()-> new IllegalArgumentException("해당 id의 사용자가 존재하지 않습니다.")
+                () -> new IllegalArgumentException("해당 id의 사용자가 존재하지 않습니다.")
         );
         User target = userRepository.findById(id).orElseThrow(
-                ()-> new IllegalArgumentException("해당 id의 사용자가 존재하지 않습니다.")
+                () -> new IllegalArgumentException("해당 id의 사용자가 존재하지 않습니다.")
         );
 
 
-            return userfollow.follow(id);
+        return userfollow.follow(id);
     }
 
     public String deactivateUser(User user) {
@@ -69,11 +69,11 @@ public class UserService {
                 () -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다")
         );
 
-        if(target.getStatus().equals("DEACTIVATED")){
+        if (target.getStatus().equals("DEACTIVATED")) {
             throw new IllegalArgumentException("해당 사용자는 이미 비활성화 상태입니다.");
         }
 
-        if(target.getStatus().equals("DELETED")){
+        if (target.getStatus().equals("DELETED")) {
             throw new IllegalArgumentException("해당 사용자는 탈퇴된 상태입니다. 활성화된 사용자만 비활성화 할 수 있습니다.");
         }
 
@@ -86,11 +86,11 @@ public class UserService {
                 () -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다")
         );
 
-        if(target.getStatus().equals("ACTIVATED")){
+        if (target.getStatus().equals("ACTIVATED")) {
             throw new IllegalArgumentException("해당 사용자는 이미 활성화 상태입니다.");
         }
 
-        if(target.getStatus().equals("DELETED")){
+        if (target.getStatus().equals("DELETED")) {
             throw new IllegalArgumentException("해당 사용자는 탈퇴된 상태입니다. 탈퇴된 사용자는 관리자만 활성화 할 수 있습니다.");
         }
 
@@ -103,7 +103,7 @@ public class UserService {
                 () -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다")
         );
 
-        if(target.getStatus().equals("DELETED")){
+        if (target.getStatus().equals("DELETED")) {
             throw new IllegalArgumentException("해당 사용자는 이미 탈퇴 상태입니다.");
         }
 
@@ -117,7 +117,7 @@ public class UserService {
         //    throw  new IllegalArgumentException("관리자만 탈퇴 사용자를 복구할 수 있습니다.");
 
         User target = userRepository.findById(id).orElseThrow(
-                ()-> new IllegalArgumentException("해당 사용자가 존재하지 않습니다.")
+                () -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다.")
         );
 
         String username = requestDto.getUsername();
@@ -126,12 +126,12 @@ public class UserService {
         String password = passwordEncoder.encode(requestDto.getPassword());
 
         Optional<User> checkUsername = userRepository.findByUsername(username);
-        if(checkUsername.isPresent()){
+        if (checkUsername.isPresent()) {
             throw new IllegalArgumentException("중복된 username 입니다.");
         }
 
         Optional<User> checkNickname = userRepository.findByNickname(nickname);
-        if(checkNickname.isPresent()){
+        if (checkNickname.isPresent()) {
             throw new IllegalArgumentException("중복된 nickname 입니다.");
         }
 
@@ -147,7 +147,7 @@ public class UserService {
         );
 
         Optional<User> checkUsername = userRepository.findByUsername(request.getUsername());
-        if(checkUsername.isPresent()){
+        if (checkUsername.isPresent()) {
             throw new IllegalArgumentException("중복된 username 입니다.");
         }
 
@@ -162,7 +162,7 @@ public class UserService {
         );
 
         Optional<User> checkNickname = userRepository.findByNickname(request.getNickname());
-        if(checkNickname.isPresent()){
+        if (checkNickname.isPresent()) {
             throw new IllegalArgumentException("중복된 nickname 입니다.");
         }
 
@@ -186,7 +186,7 @@ public class UserService {
                 () -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다")
         );
 
-        if(!passwordEncoder.matches(request.getOldpassword(), user.getPassword())){
+        if (!passwordEncoder.matches(request.getOldpassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 다릅니다.");
         }
 

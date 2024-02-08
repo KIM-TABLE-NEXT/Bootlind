@@ -51,10 +51,10 @@ public class User {
         this.status = "ACTIVATED";
     }
 
-    public String[] getFollwers(){
+    public String[] getFollwers() {
         String follwer[] = this.follow.split("/");
         String follwerList = Arrays.toString(follwer);
-        follwerList = follwerList.replace("follwers :, ","");
+        follwerList = follwerList.replace("follwers :, ", "");
         follwerList = follwerList.replaceAll(" ", "");
         follwerList = follwerList.replace("[", "");
         follwerList = follwerList.replace("]", "");
@@ -62,17 +62,16 @@ public class User {
         return follwers;
     }
 
-    public String follow(Long Id){
-        if(this.getId() == Id){
+    public String follow(Long Id) {
+        if (this.getId() == Id) {
             return "자신을 팔로우 할 수 없습니다.";
         }
         String follower = this.getFollow();
-        String userId  = "/" + Id;
-        if(follower.contains(userId)){
-            this.follow = this.follow.replace(userId,"");
+        String userId = "/" + Id;
+        if (follower.contains(userId)) {
+            this.follow = this.follow.replace(userId, "");
             return "언팔로우 되었습니다." + Arrays.toString(getFollwers());
-        }
-        else{
+        } else {
             this.follow = this.follow.concat(userId);
             return "팔로우 되었습니다." + Arrays.toString(getFollwers());
         }
@@ -80,16 +79,16 @@ public class User {
 
 
     public void updateStatus(String status) {
-        switch(status){
-            case "ACTIVATED" :
+        switch (status) {
+            case "ACTIVATED":
                 this.status = "ACTIVATED";
                 break;
 
-            case "DEACTIVATED" :
+            case "DEACTIVATED":
                 this.status = "DEACTIVATED";
                 break;
 
-            case "DELETED" :
+            case "DELETED":
                 this.username = "DELETED_" + this.username;
                 this.password = "DELETED_" + this.password;
                 this.nickname = "DELETED_" + this.nickname;
