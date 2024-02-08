@@ -1,9 +1,7 @@
 package com.sparta.bootlind.controller;
 
 import com.sparta.bootlind.dto.requestDto.SignupRequest;
-import com.sparta.bootlind.dto.requestDto.UserRequest;
 import com.sparta.bootlind.dto.responseDto.SignupResponse;
-import com.sparta.bootlind.dto.responseDto.UserResponse;
 import com.sparta.bootlind.security.UserDetailsImpl;
 import com.sparta.bootlind.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,10 +52,23 @@ public class UserController {
         return userService.followById(id, userDetails.getUser());
     }
 
-    @DeleteMapping("user/delete")
-    @Operation(summary = "회원탈퇴", description = "회원 탈퇴를 하며 기존 게시글의 소유를 넘긴다.")
+    @PutMapping("users/status/deactivate")
+    @Operation(summary = "회원상태 변경(비활성화)", description = "회원의 상태를 비활성화(DEACTIVATED)로 변경한다.")
+    public String deactivateUser(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.deactivateUser(userDetails.getUser());
+    }
+
+    @PutMapping("users/status/activate")
+    @Operation(summary = "회원상태 변경(활성화)", description = "회원의 상태를 활성화(ACTIVATED)로 변경한다.")
+    public String activateUser(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.activateUser(userDetails.getUser());
+    }
+
+    @PutMapping("users/status/delete")
+    @Operation(summary = "회원상태 변경(탈퇴)", description = "회원의 상태를 탈퇴(DELETED)로 변경한다.")
     public String deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return userService.deleteUser(userDetails.getUser());
     }
+
 
 }

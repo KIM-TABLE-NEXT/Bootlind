@@ -38,6 +38,9 @@ public class User {
     @Column(nullable = true)
     private String follow;
 
+    @Column(nullable = false)
+    private String status;
+
     public User(String username, String password, String nickname, String profile, UserRoleEnum role) {
         this.username = username;
         this.password = password;
@@ -45,6 +48,7 @@ public class User {
         this.profile = profile;
         this.role = role;
         this.follow = "follwers :";
+        this.status = "ACTIVATED";
     }
 
     public String[] getFollwers(){
@@ -71,6 +75,27 @@ public class User {
         else{
             this.follow = this.follow.concat(userId);
             return "팔로우 되었습니다." + Arrays.toString(getFollwers());
+        }
+    }
+
+
+    public void updateStatus(String status) {
+        switch(status){
+            case "ACTIVATED" :
+                this.status = "ACTIVATED";
+                break;
+
+            case "DEACTIVATED" :
+                this.status = "DEACTIVATED";
+                break;
+
+            case "DELETED" :
+                this.username = "DELETED_" + this.username;
+                this.password = "DELETED_" + this.password;
+                this.nickname = "DELETED_" + this.nickname;
+                this.profile = "DELETED_" + this.profile;
+                this.status = "DELETED";
+                break;
         }
     }
 
