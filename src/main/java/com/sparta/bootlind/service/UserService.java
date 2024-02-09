@@ -5,11 +5,16 @@ import com.sparta.bootlind.entity.User;
 import com.sparta.bootlind.entity.UserRoleEnum;
 import com.sparta.bootlind.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,30 +27,41 @@ public class UserService {
 
     private final String ADMIN_TOKEN = "f679d89c320cc4adb72b7647a64ccbe520406dc3ee4578b44bcffbfa7ebbb85e30b964306b6398d3a2d7098ecd1bc203551e356ac5ec4a5ee0c7dc899fb704c5";
 
-    public void signup(SignupRequest requestDto) {
+    public void signup(@Valid SignupRequest requestDto, BindingResult bindingResult) {
         String username = requestDto.getUsername();
         String profile = requestDto.getProfile();
         String nickname = requestDto.getNickname();
         String password = passwordEncoder.encode(requestDto.getPassword());
 
-        // 회원 중복 검증
-        Optional<User> verificationUser = userRepository.findByUsername(username);
-        if (verificationUser.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
-        }
+        // 필드 에러 확인
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
 
-        // 사용자 권한 확인
-        UserRoleEnum role = UserRoleEnum.USER;
-        if (requestDto.isAdmin()) {
-            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
-                throw new IllegalArgumentException("관리자 인증키가 틀려 등록이 불가능합니다.");
+        if (!fieldErrors.isEmpty()) {
+
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
             }
-            role = UserRoleEnum.ADMIN;
-        }
+            throw new IllegalArgumentException("필드 에러가 존재합니다.");
 
-        // 사용자 등록
-        User user = new User(username, password, nickname, profile, role);
-        userRepository.save(user);
+        } else {
+            // 회원 중복 검증
+            Optional<User> verificationUser = userRepository.findByUsername(username);
+            if (verificationUser.isPresent()) {
+                throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
+            }
+
+            // 사용자 권한 확인
+            UserRoleEnum role = UserRoleEnum.USER;
+            if (requestDto.isAdmin()) {
+                if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
+                    throw new IllegalArgumentException("관리자 인증키가 틀려 등록이 불가능합니다.");
+                }
+                role = UserRoleEnum.ADMIN;
+            }
+            // 사용자 등록
+            User user = new User(username, password, nickname, profile, role);
+            userRepository.save(user);
+        }
     }
 
     @Transactional
