@@ -13,7 +13,7 @@ import lombok.Setter;
 @Table(name = "posts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
-public class Post extends TimeStamped{
+public class Post extends TimeStamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,16 +33,27 @@ public class Post extends TimeStamped{
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Post(PostRequest postRequest, User user){
+    @Column
+    private String postLikes;
+
+    @Column
+    private Integer likescnt;
+
+    public Post(PostRequest postRequest, User user) {
         this.title = postRequest.getTitle();
         this.content = postRequest.getContent();
         this.category = postRequest.getCategory();
         this.user = user;
+        this.postLikes = "";
     }
 
     public void update(PostRequest postRequest) {
         this.title = postRequest.getTitle();
         this.content = postRequest.getContent();
         this.category = postRequest.getCategory();
+    }
+
+    public void updateUser(User blank) {
+        this.user = blank;
     }
 }
