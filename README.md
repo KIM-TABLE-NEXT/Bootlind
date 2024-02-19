@@ -11,7 +11,3 @@
 
 ### 프로세스 구조도
 >![](https://velog.velcdn.com/images/kim_table_next/post/f30d8be0-8a05-46a7-9781-fc3a3077c005/image.png)
-
-### 시연영상 및 회고
->https://velog.io/@kim_table_next/Project-Spring-%EB%89%B4%EC%8A%A4%ED%94%BC%EB%93%9C-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8Bootlind
-
