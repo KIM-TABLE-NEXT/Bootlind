@@ -12,7 +12,7 @@ import java.util.Arrays;
 @Getter
 @Setter
 @Table(name = "users")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class User {
 
     @Id
